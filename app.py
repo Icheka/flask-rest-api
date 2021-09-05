@@ -1,29 +1,22 @@
-from database.Plates import populatePlates
-from routes.Index import Plate, Plates, Welcome
+from routes.plates import Plate, Plates
 from flask import Flask
-from flask_restful import Resource, Api
+from flask_restful import Api
+from routes.home import Welcome
+from database.plates import plates
+
 
 app = Flask(__name__)
 api = Api(app)
-populatePlates()
+# our database
+plates.populatePlates()
 
-# routes
-'''
-Our objective is to have CRUD endpoints for:
-Adding a new plate             (Create)
-Getting data from our database (Read)
-Updating data in our database  (Update)
-Deleting data from our database(Delete)
-'''
-
-# GET index route -> return welcome message
 api.add_resource(Welcome, '/')
-# GET /plates -> return all plates in database
-api.add_resource(Plates, '/plates')
-# GET /plates/1 -> find a specific plate by its ID and return it
-api.add_resource(Plate, '/plates/<string:id>')
 
-# POST /plates -> create a new plate
+# get all plates
+api.add_resource(Plates, '/plates/')
+# get a plate by id
+api.add_resource(Plate, '/plates/<string:id>/')
+
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(port=5000, debug=True)
